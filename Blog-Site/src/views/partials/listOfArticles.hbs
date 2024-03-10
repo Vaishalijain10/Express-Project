@@ -1,0 +1,8 @@
+<div id="articles-container">
+    {{#each articles}}
+    <div>
+        <h3> <a href="/articles/{{this.id}}">{{this.title}}</a></h3>
+        <p>{{shorten this.content.[0] 200}}...</p>
+    </div>
+    {{/each}}
+</div>

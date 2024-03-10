@@ -1,0 +1,77 @@
+<script>
+    function onUpvote() {
+        const upvotesSpan = document.getElementById('number-of-upvotes');
+        const numberOfUpvotes = Number(upvotesSpan.innerText);
+        upvotesSpan.innerText = numberOfUpvotes + 1;
+        const articleId = "{{ article.id }}";
+        fetch(`/api/articles/${articleId}/upvotes`, { method: 'put' });
+    }
+
+    function onNewComment() {
+        const authorInput = document.getElementById("comment-author");
+        const textInput = document.getElementById("comment-text");
+
+        const author = authorInput.value;
+        const text = textInput.value;
+
+        const articleId = "{{ article.id }}";
+
+        fetch(`/api/articles/${articleId}/comments`, {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ author, text })
+        })
+            .then(res => res.json())
+            .then(NewComment => {
+                const commentsContainer = document.getElementById('comments-container');
+
+                const newCommentContainer = document.createElement('div');
+
+                const authorHeading = document.createElement('h3');
+                authorHeading.innerText = newComment.author;
+
+                const dateEl = document.createElement('h3');
+                dateEl.innerText = `Posted on ${newComment.createdAt}`;
+
+                const textEl = document.createElement('h3');
+                textEl.innerText = newComment.text;
+
+                newCommentsContainer.appendChild(authorHeading);
+                newCommentsContainer.appendChild(dateEl);
+                newCommentsContainer.appendChild(textEl);
+
+                commentsContainer.appendChild(newCommentContainer);
+
+                authorInput.value = '';
+                textInput.value = '';
+            })
+    }
+</script>
+
+<h1>{{ article.title }}</h1>
+<div>
+    <p>This article has been upvoted <span id="number-of-upvotes">{{ article.upvotes }} </span> time(s)</p>
+    <button onclick="onUpvote();">Update</button>
+</div>
+{{#each article.content}}
+<p>{{ this }}</p>
+{{/each}}
+
+<h3>Related Articles</h3>
+{{> listOfArticles }}
+<div>
+    <input type="text" id="comment-author" placeholder="Enter your name" />
+    <textarea name="" id="comment-text" cols="30" rows="10" placeholder="Wite your comment here..."></textarea>
+    <button onclick="onNewComment();">Submit</button>
+</div>
+
+<div id="comments-container">
+    {{#each article.comments}}
+    <div>
+        <h3>{{this.author}}</h3>
+        <p>Posted on {{  this.createdAt}}</p>
+        <p>{{this.text}}</p>
+    </div>
+    {{/each}}
+
+</div>
