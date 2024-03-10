@@ -1,0 +1,296 @@
+-------------------------------
+1. Front-end Execution Basics
+-------------------------------
+1. npm install express
+2. created folder scr and file server.js
+3. created index.html file and server.js
+4. installed new package-
+    npm install --save-dev nodemon
+important! -command to start the nodemon in
+             npx nodemon filename 
+5. index.html
+ <body>
+    <h1>This is a Test!</h1>
+    <p>alter box appears</p>
+    <script>
+        alert('Hello from the front-end!');
+    </script>
+</body>
+
+6. server.js
+ // importing installed packages
+const express = require("express");
+const path = require("path");
+
+// calling the packages that are imported
+const app = express();
+
+// linking index.html file
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// starting the server.
+app.listen(8080, () => {
+  console.log("Server is listening on port 8080");
+});
+
+----------------------------------------------------
+2. Loading Data from Express with Front-end Code
+----------------------------------------------------
+1. Fetch api is a function.
+2. 
+<body>
+    <h1>This is a Test!</h1>
+    <script>
+        //passing a callback function
+        fetch('/api/users')
+            .then(response => response.json())
+            .then(users => console.log(users))
+    </script>
+</body>
+3. // importing installed packages
+const express = require("express");
+const path = require("path");
+
+// calling the packages that are imported
+const app = express();
+
+// linking index.html file
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/api/users", (req, res) => {
+  const users = [
+    {
+      id: "101",
+      name: "Vaishali",
+    },
+    {
+      id: "102",
+      name: "Kalpesh",
+    },
+    {
+      id: "103",
+      name: "Vinay",
+    },
+    {
+      id: "105",
+      name: "Yogita",
+    },
+    {
+      id: "106",
+      name: "Soumitra",
+    }];
+  res.json(users);
+});
+
+// starting the server.
+app.listen(8080, () => {
+  console.log("Server is listening on port 8080");
+});
+
+----------------------------------------------------
+3. Modifying Interface Elements
+----------------------------------------------------
+1. manipulating in page.
+2. <body>
+    <h1>Users</h1>
+    <h3 id="user-1-name"></h3>
+    <h3 id="user-2-name"></h3>
+    <h3 id="user-3-name"></h3>
+    <h3 id="user-4-name"></h3>
+    <h3 id="user-5-name"></h3>
+    <h3 id="user-6-name"></h3>
+    <script>
+        // h1 tag gets the new heading manipulated by javascript
+        // [...] -> these 3 dots represents array.
+
+        // const heading = document.getElementById('test-heading');
+        // heading.innerText = 'Hello from JavaScript';
+
+        // assigning each username!
+        // fetch('/api/users')
+        //     .then(response => response.json())
+        //     .then(users => {
+        //         const u1 = document.getElementById('user-1-name')
+        //         u1.innerText = users[0].name;
+        //         const u2 = document.getElementById('user-2-name')
+        //         u2.innerText = users[1].name;
+        //         const u3 = document.getElementById('user-3-name')
+        //         u3.innerText = users[2].name;
+        //         const u4 = document.getElementById('user-4-name')
+        //         u4.innerText = users[3].name;
+        //         const u5 = document.getElementById('user-5-name')
+        //         u5.innerText = users[4].name;
+        //         const u6 = document.getElementById('user-6-name')
+        //         u6.innerText = users[5].name;
+        //     })
+
+        // dynamically assigning username with less code
+        fetch('/api/users')
+            .then(response => response.json())
+            .then(users => {
+                users.forEach((user, i) => {
+                    const uElement = document.getElementById(`user-${i + 1}-name`)
+                    uElement.innerText = user.name;
+                })
+            });
+    </script>
+</body>
+3. // importing installed packages
+const express = require("express");
+const path = require("path");
+
+// calling the packages that are imported
+const app = express();
+
+// linking index.html file
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/api/users", (req, res) => {
+  const users = [
+    {
+      id: "101",
+      name: "Vaishali",
+    },
+    {
+      id: "102",
+      name: "Kalpesh",
+    },
+    {
+      id: "103",
+      name: "Vinay",
+    },
+    {
+      id: "105",
+      name: "Yogita",
+    },
+    {
+      id: "106",
+      name: "Soumitra",
+    }];
+  res.json(users);
+});
+
+// starting the server.
+app.listen(8080, () => {
+  console.log("Server is listening on port 8080");
+});
+
+
+----------------------------------------------------
+4. Other Front-end and Back-end Interactions
+----------------------------------------------------
+1. <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front-end Execution Test </title>
+    <script>
+        // creating a function
+        function createClicked() {
+            const newUserInput = document.getElementById('new-user-name');
+            const newUserName = newUserInput.value;
+            // alert(`You entered ${newUserName}`);
+            fetch('/api/users', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newUserName })
+            })
+                .then(response => response.json())
+                .then(updatedUsers => {
+                    updatedUsers.forEach((user, i) => {
+                        const uElement = document.getElementById(`user-${i + 1}-name`)
+                        uElement.innerText = user.name;
+                        newUserInput.value = '';
+                    })
+                })
+        }
+    </script>
+</head>
+<body>
+    <h1>Users</h1>
+    <h3 id="user-1-name"></h3>
+    <h3 id="user-2-name"></h3>
+    <h3 id="user-3-name"></h3>
+    <h3 id="user-4-name"></h3>
+    <h3 id="user-5-name"></h3>
+    <h3 id="user-6-name"></h3>
+    <h3 id="user-7-name"></h3>
+    <h3 id="user-8-name"></h3>
+    <h3 id="user-9-name"></h3>
+    <h3 id="user-10-name"></h3>
+    <div>
+        <input id="new-user-name" type="text" placeholder="Enter a new username">
+        <button onclick="createClicked()">Create</button>
+    </div>
+    <script>
+        fetch('/api/users')
+            .then(response => response.json())
+            .then(users => {
+                users.forEach((user, i) => {
+                    const uElement = document.getElementById(`user-${i + 1}-name`)
+                    uElement.innerText = user.name;
+                })
+            });
+    </script>
+</body>
+</html>
+
+2. // importing installed packages
+const express = require("express");
+const path = require("path");
+
+// calling the packages that are imported
+const app = express();
+app.use(express.json());
+// OBJECT -
+const users = [
+  {
+    id: "101",
+    name: "Vaishali",
+  },
+  {
+    id: "102",
+    name: "Kalpesh",
+  },
+  {
+    id: "103",
+    name: "Vinay",
+  },
+  {
+    id: "105",
+    name: "Yogita",
+  },
+  {
+    id: "106",
+    name: "Soumitra",
+  },
+];
+
+// linking index.html file
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/api/users", (req, res) => {
+  res.json(users);
+});
+
+//
+app.post("/api/users", (req, res) => {
+  const { name } = req.body;
+  users.push({ id: "1001", name });
+  res.json(users);
+});
+
+// starting the server.
+app.listen(8080, () => {
+  console.log("Server is listening on port 8080");
+});
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front-end Execution Test </title>
+    <script>
+        // creating a function
+        function createClicked() {
+            const newUserInput = document.getElementById('new-user-name');
+            const newUserName = newUserInput.value;
+            // alert(`You entered ${newUserName}`);
+            fetch('/api/users', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newUserName })
+            })
+                .then(response => response.json())
+                .then(updatedUsers => {
+                    updatedUsers.forEach((user, i) => {
+                        const uElement = document.getElementById(`user-${i + 1}-name`)
+                        uElement.innerText = user.name;
+                        newUserInput.value = '';
+                    })
+                })
+        }
+    </script>
+</head>
+<body>
+    <h1>Users</h1>
+    <h3 id="user-1-name"></h3>
+    <h3 id="user-2-name"></h3>
+    <h3 id="user-3-name"></h3>
+    <h3 id="user-4-name"></h3>
+    <h3 id="user-5-name"></h3>
+    <h3 id="user-6-name"></h3>
+    <h3 id="user-7-name"></h3>
+    <h3 id="user-8-name"></h3>
+    <h3 id="user-9-name"></h3>
+    <h3 id="user-10-name"></h3>
+    <div>
+        <input id="new-user-name" type="text" placeholder="Enter a new username">
+        <button onclick="createClicked()">Create</button>
+    </div>
+    <script>
+        fetch('/api/users')
+            .then(response => response.json())
+            .then(users => {
+                users.forEach((user, i) => {
+                    const uElement = document.getElementById(`user-${i + 1}-name`)
+                    uElement.innerText = user.name;
+                })
+            });
+    </script>
+</body>
+</html>
