@@ -1,0 +1,18 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+  </head>
+  <body>
+    {{! opening each }}
+    {{#each users}}
+      <h3>Name : {{this.name}}</h3>
+      {{#if this.age}}
+        <p>Age : {{this.age}}</p>
+      {{/if}}
+      <p>Hair Color : {{this.HairColor}}</p>
+      {{! closing each }}
+    {{/each}}
+  </body>
+</html>

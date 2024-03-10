@@ -1,0 +1,22 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+  </head>
+  <body>
+    {{! WAY -1 }}
+    {{!-- <h3 id="user-name">{{name}}</h3>
+    <p id="user-age">{{age}}</p>
+    <p id="user-hair-color">{{HairColor}}</p> --}}
+
+    {{! WAY-2 }}
+    <h3>Name : {{user.name}}</h3>
+    {{! opening if }}
+    {{#if user.age}}
+      <p>Age : {{user.age}}</p>
+      {{! closing if }}
+    {{/if}}
+    <p>Hair Color : {{user.HairColor}}</p>
+  </body>
+</html>
