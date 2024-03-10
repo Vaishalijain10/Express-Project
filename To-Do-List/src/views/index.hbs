@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Todo List</title>
+
+    <script>
+        let todos = JSON.parse(`{{{todosString}}}`);
+
+        function setTodos(todos) {
+            const container = document.getElementById('todo-list-container');
+            container.innerHTML = '';
+            for (let todo of todos) {
+                const newTodoContainer = document.createElement('div');
+
+                const newTodoHeading = document.createElement('h3');
+                newTodoHeading.innerText = todo.text;
+                newTodoContainer.appendChild(newTodoHeading);
+
+                if (todo.isCompleted) {
+                    const newTodoCompletedMessage = document.createElement('p');
+                    newTodoCompletedMessage.innerText = 'Complete!';
+                    newTodoContainer.appendChild(newTodoCompletedMessage);
+                }
+                const newTodoDeleteButton = document.createElement('button');
+                newTodoDeleteButton.innerText = 'Delete';
+                newTodoContainer.appendChild(newTodoDeleteButton);
+
+                const newTodoCompleteButton = document.createElement('button');
+                newTodoCompleteButton.innerText = 'Mark as Completed';
+                newTodoCompleteButton.onclick = function () {
+                    onCompleteTodo(todo.id)
+                }
+                newTodoContainer.appendChild(newTodoCompleteButton);
+                container.appendChild(newTodoContainer);
+            }
+        }
+
+        function onCreateTodo() {
+            const input = document.getElementById('new-todo-input');
+            const newTodoText = input.value;
+            fetch('/todos', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ newTodoText }),
+            })
+                .then(res => res.json())
+                .then(newTodo => {
+                    todos.push(newTodo);
+                    setTodos(todos);
+                    input.value = ''
+                });
+        }
+
+        function onCompleteTodo(id) {
+            fetch(`/todos/${id}`, { method: 'put' })
+                .then(res => res.json())
+                .then(updatedTodo => {
+                    todos = todos.map(t => t.id === updatedTodo.id ? updatedTodo : t)
+                    setTodos(todos);
+                })
+        }
+    </script>
+</head>
+
+<body>
+    <h1>My Todo's</h1>
+    <div id="todo-list-container">
+        {{#each todos}}
+        <div id="todos-{{this.id}}">
+            <h3>{{this.text}}</h3>
+            {{#if this.isCompleted}}
+            <p>Completed</p>
+            {{/if}}
+            <button>Delete</button>
+            <button onclick="onCompleteTodo('{{this.id}}')">Marked as Completed</button>
+        </div>
+        {{/each}}
+    </div>
+    <div style="padding-top: 20px;">
+        <input id="new-todo-input" type="text" placeholder="Enter your new task here!" />
+        <button onclick="onCreateTodo()">Add to List</button>
+    </div>
+</body>
+
+</html>
